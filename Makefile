@@ -17,7 +17,7 @@ CXXFLAGS := \
 	$(DEFS) \
 	$(USER_DEFS)
 
-LDFLAGS := -pthread -ltins
+LDFLAGS := -pthread -ltins -lPocoNet -lPocoUtil -lPocoFoundation
 
 ################################################################################
 # Compilation tweaking
@@ -42,7 +42,8 @@ CXXFLAGS += \
 	$(foreach w,$(WARNINGS_TAE),-Werror-$(w))
 endif
 
-ADDITIONAL_SOURCE_DIRS := $(PWD)/Part
+ADDITIONAL_SOURCE_DIRS := \
+	$(PWD)/Remote
 
 ADDITIONAL_INCLUDE_DIRS := \
 	$(PWD) \
@@ -82,7 +83,7 @@ EXES := wrapper
 LIBTHERON := $(PWD)/lib/Theron-6.00.02/Lib/libtherond.a
 
 $(LIBTHERON): 
-	make -C lib/Theron-6.00.02
+	make CC=$(CXX) -C lib/Theron-6.00.02 library
 
 ARCHIVES += $(LIBTHERON)
 
@@ -103,7 +104,7 @@ ARCHIVES += $(LIBTHERON)
 all: $(EXES)
 
 $(EXES): $(OBJECTS) $(ARCHIVES)
-	$(CXX) -g $(LDFLAGS) -o $@ $(OBJECTS) $(ARCHIVES)
+	$(CXX) -g -o $@ $(OBJECTS) $(ARCHIVES) $(LDFLAGS)
 
 clean:
 	@rm -f $(EXES) $(OBJECTS) $(DEPS)

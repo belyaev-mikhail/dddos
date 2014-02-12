@@ -43,8 +43,10 @@ inline bool isSynAck(const Tins::TCP& tcp) {
 struct SynFloodChecker {
     Theron::Framework* framework;
     Theron::Address logger;
-
     std::unordered_map<Tins::IPv4Address, size_t> factors;
+
+    SynFloodChecker(Theron::Framework* framework, Theron::Address logger): 
+        framework(framework), logger(logger), factors{} {};
 
     void operator()(Tins::PDU& pdu) {
         if(auto tcp = pdu.find_pdu<Tins::TCP>()) {
@@ -70,7 +72,7 @@ int main(int argc, char* argv[])
     Theron::Framework loggerFramework { Theron::Framework::Parameters{ 1U } };
     Logger logger(loggerFramework);
 
-    SynFloodChecker checker { &loggerFramework, logger.GetAddress(), {} };
+    SynFloodChecker checker { &loggerFramework, logger.GetAddress() };
 
     Tins::Sniffer sniffer(argv[1], 2000, true, "");
     for(auto&& pdu : sniffer) {

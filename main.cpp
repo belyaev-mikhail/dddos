@@ -1,33 +1,69 @@
 #include <Theron/Theron.h>
 
-#include <iostream>
+#include <tins/ethernetII.h>
+#include <tins/ip.h>
+#include <tins/ip_address.h>
+#include <tins/ipv6.h>
+#include <tins/ipv6_address.h>
+#include <tins/tcp.h>
+#include <tins/network_interface.h>
+#include <tins/sniffer.h>
+#include <tins/utils.h>
+#include <tins/packet_sender.h>
 
-class Actor : public Theron::Actor
+#include <iostream>
+#include <string>
+
+class Logger : public Theron::Actor
 {
 public:
 
-    explicit Actor(Theron::Framework &framework) : Theron::Actor(framework)
+    explicit Logger(Theron::Framework &framework) : Theron::Actor(framework)
     {
-        RegisterHandler(this, &Actor::Handler);
+        RegisterHandler(this, &Logger::Handler);
     }
 
 private:
 
-    void Handler(const int &message, const Theron::Address from)
+    void Handler(const std::string& message, const Theron::Address)
     {
         std::cerr << message << std::endl;
-        Send(message, from);
     }
 };
 
-int main()
+inline bool isDedicatedSyn(const Tins::TCP& tcp) {
+    return tcp.flags() == Tins::TCP::SYN;
+}
+
+inline bool isSynAck(const Tins::TCP& tcp) {
+    return tcp.flags() == (Tins::TCP::SYN | Tins::TCP::ACK);
+}
+
+int main(int argc, char* argv[])
 {
-    Theron::Receiver receiver;
-    Theron::Framework framework;
-    Actor actor(framework);
+    Theron::Framework loggerFramework { Theron::Framework::Parameters{ 1U } };
+    Logger logger(loggerFramework);
 
-    framework.Send(int(0), receiver.GetAddress(), actor.GetAddress());
-    framework.Send(int(32), receiver.GetAddress(), actor.GetAddress());
-
-    receiver.Wait();
-} 
+    Tins::Sniffer sniffer(argv[1], 2000, true, "");
+    for(auto&& pdu : sniffer) {
+        if(auto ip = pdu.find_pdu<Tins::IP>()) {
+            loggerFramework.Send("From:" + ip->src_addr().to_string(), Theron::Address::Null(), logger.GetAddress());
+            loggerFramework.Send("To:" + ip->dst_addr().to_string(), Theron::Address::Null(), logger.GetAddress());
+        }
+        if(auto ip = pdu.find_pdu<Tins::IPv6>()) {
+            loggerFramework.Send("From:" + ip->src_addr().to_string(), Theron::Address::Null(), logger.GetAddress());
+            loggerFramework.Send("To:" + ip->dst_addr().to_string(), Theron::Address::Null(), logger.GetAddress());
+        }
+        if(auto tcp = pdu.find_pdu<Tins::TCP>()) {
+            if(isSynAck(*tcp)) {
+                loggerFramework.Send(std::string("SYN-ACK"), Theron::Address::Null(), logger.GetAddress());
+            }
+            
+            if(isDedicatedSyn(*tcp)) {
+                loggerFramework.Send(std::string("SYN"), Theron::Address::Null(), logger.GetAddress());
+            }
+        }
+            
+    }
+ 
+}

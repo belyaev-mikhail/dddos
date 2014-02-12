@@ -4,20 +4,20 @@
 
 CXX := g++
 
-INCLUDE_DIRS := #
-
-DEFS := -DGOOGLE_PROTOBUF_NO_RTTI
+INCLUDE_DIRS :=
+DEFS :=
+USER_DEFS :=
 
 INCLUDES := $(foreach dir, $(INCLUDE_DIRS), -I"$(dir)")
 
 CXXFLAGS := \
 	-std=c++11 \
-	-g \
+	-O3 \
 	$(INCLUDES) \
 	$(DEFS) \
 	$(USER_DEFS)
 
-LDFLAGS := -pthread
+LDFLAGS := -pthread -ltins
 
 ################################################################################
 # Compilation tweaking
@@ -44,7 +44,6 @@ endif
 
 ADDITIONAL_SOURCE_DIRS := $(PWD)/Part
 
-
 ADDITIONAL_INCLUDE_DIRS := \
 	$(PWD) \
 	$(PWD)/lib/Theron-6.00.02/Include \
@@ -60,7 +59,7 @@ OBJECTS := $(SOURCES:.cpp=.o)
 
 DEPS := $(SOURCES:.cpp=.d)
 
-ARCHIVES := $(PWD)/lib/Theron-6.00.02/Lib/libtherond.a
+ARCHIVES :=
 
 EXES := wrapper
 
@@ -80,8 +79,12 @@ EXES := wrapper
 # Building libtheron
 ################################################################################
 
-$(PWD)/lib/Theron-6.00.02/Lib/libtherond.a: 
+LIBTHERON := $(PWD)/lib/Theron-6.00.02/Lib/libtherond.a
+
+$(LIBTHERON): 
 	make -C lib/Theron-6.00.02
+
+ARCHIVES += $(LIBTHERON)
 
 ################################################################################
 # Meta rules

@@ -1,0 +1,9 @@
+syntax: glob
+
+*.d
+*.o
+wrapper
+Docs
+Bin
+Lib
+

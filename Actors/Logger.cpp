@@ -1,5 +1,7 @@
 #include "Actors/Logger.h"
 
+#include <iostream>
+
 namespace ignis {
 
 Logger::Logger(Theron::Framework &framework) : Theron::Actor(framework)
@@ -8,12 +10,12 @@ Logger::Logger(Theron::Framework &framework) : Theron::Actor(framework)
     RegisterHandler(this, &Logger::StringHandler);
 }
 
-void RecordHandler(const LogRecord& message, const Theron::Address)
+void Logger::RecordHandler(const LogRecord& message, const Theron::Address)
 {
     std::cerr << message.message << std::endl;
 }
 
-void StringHandler(const std::string& message, const Theron::Address)
+void Logger::StringHandler(const std::string& message, const Theron::Address)
 {
     std::cerr << message << std::endl;
 }

@@ -43,7 +43,9 @@ CXXFLAGS += \
 endif
 
 ADDITIONAL_SOURCE_DIRS := \
-	$(PWD)/Remote
+	$(PWD)/Remote \
+	$(PWD)/Util \
+	$(PWD)/Actors
 
 ADDITIONAL_INCLUDE_DIRS := \
 	$(PWD) \

@@ -1,6 +1,8 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
+#include <string>
+
 #include <Theron/Theron.h>
 
 namespace ignis {

@@ -2,17 +2,10 @@
 
 #include <Theron/Theron.h>
 
-namespace ignis {
+#include "Util/Json.hpp"
 
-struct JsonObject {
-    std::string to_string() const { return "{}"; };
-};
-
+namespace ignis  {
 namespace remote {
-
-class RestEndpoint{
-    uint16_t port;
-};
 
 class RestActorRef : public Theron::Actor {
     struct Impl;
@@ -21,7 +14,7 @@ public:
     explicit RestActorRef(Theron::Framework &framework, const std::string& uri);
     ~RestActorRef();
 private:
-    void Handler(const JsonObject& message, const Theron::Address);
+    void Handler(const util::JsonValue& message, const Theron::Address);
 };
 
 class RestActorImpl : public Theron::Actor {
@@ -31,7 +24,7 @@ public:
     explicit RestActorImpl(Theron::Framework &framework, uint16_t port);
     ~RestActorImpl();
 private:
-    void Handler(const JsonObject& message, const Theron::Address);
+    void Handler(const util::JsonValue& message, const Theron::Address);
 };
 
 } /* namespace remote */

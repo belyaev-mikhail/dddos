@@ -14,23 +14,9 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <thread>
 
-class Logger : public Theron::Actor
-{
-public:
-
-    explicit Logger(Theron::Framework &framework) : Theron::Actor(framework)
-    {
-        RegisterHandler(this, &Logger::Handler);
-    }
-
-private:
-
-    void Handler(const std::string& message, const Theron::Address)
-    {
-        std::cerr << message << std::endl;
-    }
-};
+#include "Actors/Logger.h"
 
 inline bool isDedicatedSyn(const Tins::TCP& tcp) {
     return tcp.flags() == Tins::TCP::SYN;
@@ -65,18 +51,27 @@ struct SynFloodChecker {
     }
 };
 
-
-
 int main(int argc, char* argv[])
 {
+    using namespace ignis;
     Theron::Framework loggerFramework { Theron::Framework::Parameters{ 1U } };
     Logger logger(loggerFramework);
 
-    SynFloodChecker checker { &loggerFramework, logger.GetAddress() };
+    auto sniffer = std::thread{
+        [argv](Theron::Address loggerAddress){
+            Theron::Framework local { Theron::Framework::Parameters{ 0U } };
+            SynFloodChecker checker { &local, loggerAddress };
 
-    Tins::Sniffer sniffer(argv[1], 2000, true, "");
-    for(auto&& pdu : sniffer) {
-        checker(pdu);            
-    }
- 
+            Tins::Sniffer sniffer(argv[1], 2000, true, "");
+            for(auto&& pdu : sniffer) {
+                checker(pdu);
+            }
+        },
+        logger.GetAddress()
+    };
+
+
+    sniffer.join();
+
+
 }

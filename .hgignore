@@ -7,3 +7,6 @@ Docs
 Bin
 Lib
 
+.cproject
+.project
+.settings

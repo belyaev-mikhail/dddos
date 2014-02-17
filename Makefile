@@ -17,7 +17,7 @@ CXXFLAGS := \
 	$(DEFS) \
 	$(USER_DEFS)
 
-LDFLAGS := -pthread -ltins -lPocoNet -lPocoUtil -lPocoFoundation
+LDFLAGS := -pthread -ltins -lPocoNet -lPocoUtil -lPocoFoundation -ljsoncpp
 
 ################################################################################
 # Compilation tweaking

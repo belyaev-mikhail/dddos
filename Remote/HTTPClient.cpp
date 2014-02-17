@@ -20,9 +20,7 @@
 
 #include "Remote/HTTPClient.h"
 
-struct JsonObject {};
-
-namespace ignis {
+namespace ignis  {
 namespace remote {
 
 struct RestActorRef::Impl {
@@ -31,13 +29,14 @@ struct RestActorRef::Impl {
 
 RestActorRef::RestActorRef(Theron::Framework &framework, const std::string& uri) : 
     Theron::Actor(framework),
-    pImpl(new Impl{ Poco::URI{ uri.c_str() } }) {
+    pImpl(new Impl{ Poco::URI{ uri.c_str() } })
+{
     RegisterHandler(this, &RestActorRef::Handler);
 }
 
 RestActorRef::~RestActorRef() {}
 
-void RestActorRef::Handler(const JsonObject& message, const Theron::Address)
+void RestActorRef::Handler(const util::JsonValue& message, const Theron::Address)
 {
     using namespace Poco::Net;
     auto&& uri = pImpl->uri;
@@ -49,8 +48,7 @@ void RestActorRef::Handler(const JsonObject& message, const Theron::Address)
 
     // send request
     HTTPRequest req(HTTPRequest::HTTP_POST, path, HTTPMessage::HTTP_1_1);
-    session.sendRequest(req) << message.to_string();
-
+    session.sendRequest(req) << message.toStyledString();
     // get response
     HTTPResponse res;
     std::cout << res.getStatus() << " " << res.getReason() << std::endl;
@@ -118,7 +116,7 @@ RestActorImpl::~RestActorImpl() {
     pImpl->server.stop();
 }
 
-void RestActorImpl::Handler(const JsonObject& message, const Theron::Address)
+void RestActorImpl::Handler(const util::JsonValue& message, const Theron::Address)
 {
     std::cout << "Message received, lol" << std::endl;
 }

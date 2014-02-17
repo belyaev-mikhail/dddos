@@ -16,6 +16,8 @@
 #include <unordered_map>
 #include <thread>
 
+#include <tclap/CmdLine.h>
+
 #include "Actors/Logger.h"
 
 inline bool isDedicatedSyn(const Tins::TCP& tcp) {
@@ -53,21 +55,32 @@ struct SynFloodChecker {
 
 int main(int argc, char* argv[])
 {
+
+    TCLAP::CmdLine cmd("This is a test command",' ',"0.0.1");
+    TCLAP::SwitchArg promisc("p", "promisc", "Turn on promiscious mode for your network card", false);
+    cmd.add(promisc);
+    TCLAP::ValueArg<std::string> interface("i", "interface", "Use network interface", false,
+        Tins::NetworkInterface::default_interface().name(), "ethN");
+    cmd.add(interface);
+    cmd.parse(argc, argv);
+
     using namespace ignis;
     Theron::Framework loggerFramework { Theron::Framework::Parameters{ 1U } };
     Logger logger(loggerFramework);
 
     auto sniffer = std::thread{
-        [argv](Theron::Address loggerAddress){
+        [argv](Theron::Address loggerAddress, bool promisc, const std::string& iface){
             Theron::Framework local { Theron::Framework::Parameters{ 0U } };
             SynFloodChecker checker { &local, loggerAddress };
 
-            Tins::Sniffer sniffer(argv[1], 2000, true, "");
+            Tins::Sniffer sniffer(iface, 2000, promisc, "");
             for(auto&& pdu : sniffer) {
                 checker(pdu);
             }
         },
-        logger.GetAddress()
+        logger.GetAddress(),
+        promisc.getValue(),
+        interface.getValue()
     };
 
 

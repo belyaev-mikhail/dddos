@@ -45,7 +45,9 @@ endif
 ADDITIONAL_SOURCE_DIRS := \
 	$(PWD)/Remote \
 	$(PWD)/Util \
-	$(PWD)/Actors
+	$(PWD)/Actors \
+	$(PWD)/Driver \
+	$(PWD)/Checkers
 
 ADDITIONAL_INCLUDE_DIRS := \
 	$(PWD) \

@@ -20,11 +20,7 @@
 
 #include "Remote/HTTPClient.h"
 
-<<<<<<< local
 namespace ignis {
-=======
-namespace ignis  {
->>>>>>> other
 namespace remote {
 
 struct RestActorRef::Impl {
@@ -52,15 +48,9 @@ void RestActorRef::Handler(const util::JsonValue& message, const Theron::Address
 
     // send request
     HTTPRequest req(HTTPRequest::HTTP_POST, path, HTTPMessage::HTTP_1_1);
-<<<<<<< local
     req.setContentType("text/json");
-=======
->>>>>>> other
     session.sendRequest(req) << message.toStyledString();
-<<<<<<< local
 
-=======
->>>>>>> other
     // get response
     HTTPResponse res;
     std::cout << res.getStatus() << " " << res.getReason() << std::endl;

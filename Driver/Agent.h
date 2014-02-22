@@ -22,7 +22,7 @@
 
 #include "Checkers/SynFloodChecker.h"
 
-namespace ignis {
+namespace callophrys {
 
 class Agent {
 

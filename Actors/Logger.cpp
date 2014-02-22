@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace ignis {
+namespace callophrys {
 
 Logger::Logger(Theron::Framework &framework) : Theron::Actor(framework)
 {
@@ -20,4 +20,4 @@ void Logger::StringHandler(const std::string& message, const Theron::Address)
     std::cerr << message << std::endl;
 }
 
-} /* namespace ignis */ 
+} /* namespace callophrys */ 

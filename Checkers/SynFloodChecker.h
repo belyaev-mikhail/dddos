@@ -23,7 +23,7 @@
 #include <tins/utils.h>
 #include <tins/packet_sender.h>
 
-namespace ignis {
+namespace callophrys {
 
 inline bool isDedicatedSyn(const Tins::TCP& tcp) {
     return tcp.flags() == Tins::TCP::SYN;
@@ -58,6 +58,6 @@ struct SynFloodChecker {
     }
 };
 
-} /* namespace ignis */
+} /* namespace callophrys */
 
 #endif /* SYNFLOODCHECKER_H_ */

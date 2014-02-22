@@ -8,7 +8,7 @@
 
 #include <type_traits>
 
-namespace ignis {
+namespace callophrys {
 namespace util {
 
 // DO NOT DEFINE! decltype resolving only
@@ -268,6 +268,6 @@ template<size_t I, class TypeList>
 using index_in_type_list_q = typename index_in_type_list<I, TypeList>::type;
 
 } // namespace util
-} // namespace ignis
+} // namespace callophrys
 
 #endif /* META_HPP_ */

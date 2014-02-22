@@ -9,11 +9,11 @@
 // #ifndef MACROS_H_
 // #define MACROS_H_
 
-#ifdef IGNIS_MACROS_DEFINED
+#ifdef CALLOPHRYS_MACROS_DEFINED
 #error "macros.h included twice!"
 #endif
 
-#define IGNIS_MACROS_DEFINED
+#define CALLOPHRYS_MACROS_DEFINED
 
 /*
  * Macro for quick-writing one-liners with tricky typing.

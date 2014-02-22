@@ -9,7 +9,7 @@
 // #ifndef UNMACROS_H_
 // #define UNMACROS_H_
 
-#ifdef IGNIS_MACROS_DEFINED
+#ifdef CALLOPHRYS_MACROS_DEFINED
 
 #    undef QUICK_RETURN
 #    undef QUICK_CONST_RETURN
@@ -25,12 +25,12 @@
 #    undef ON_SCOPE_EXIT
 #    undef PRETOKENPASTE
 #    undef TOKENPASTE
-#    undef IGNIS_MACROS_DEFINED
+#    undef callophrys_MACROS_DEFINED
 
 #else
 
 #    error "unmacros.h is included without corresponding macros.h include!"
 
-#endif // IGNIS_MACROS_DEFINED
+#endif // CALLOPHRYS_MACROS_DEFINED
 
 // #endif /* UNMACROS_H_ */

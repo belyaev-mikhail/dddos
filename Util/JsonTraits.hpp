@@ -14,7 +14,7 @@
 
 #include "Util/Json.hpp"
 
-namespace ignis {
+namespace callophrys {
 namespace util {
 
 template<class T>
@@ -84,6 +84,6 @@ struct json_traits<std::map<std::string, V>> {
 };
 
 } // namespace util
-} // namespace ignis
+} // namespace callophrys
 
 #endif /* JSON_TRAITS_HPP_ */

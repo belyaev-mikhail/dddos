@@ -4,7 +4,7 @@
 
 #include "Util/Json.hpp"
 
-namespace ignis  {
+namespace callophrys  {
 namespace remote {
 
 class RestActorRef : public Theron::Actor {
@@ -28,4 +28,4 @@ private:
 };
 
 } /* namespace remote */
-} /* namespace ignis */
+} /* namespace callophrys */

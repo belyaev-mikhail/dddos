@@ -20,7 +20,7 @@
 
 #include "Remote/HTTPClient.h"
 
-namespace ignis {
+namespace callophrys {
 namespace remote {
 
 struct RestActorRef::Impl {
@@ -124,4 +124,4 @@ void RestActorImpl::Handler(const util::JsonValue& message, const Theron::Addres
 }
 
 } /* namespace remote */
-} /* namespace ignis */
+} /* namespace callophrys */

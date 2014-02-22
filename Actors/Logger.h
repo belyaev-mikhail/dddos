@@ -5,7 +5,7 @@
 
 #include <Theron/Theron.h>
 
-namespace ignis {
+namespace callophrys {
 
 struct LogRecord {
     enum class Priotity { DBG, INFO, WARN, ERROR };

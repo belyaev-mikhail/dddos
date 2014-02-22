@@ -7,10 +7,10 @@
 
 #include "Driver/Agent.h"
 
-namespace ignis {
+namespace callophrys {
 
 void Agent::start() {
-    using namespace ignis;
+    using namespace callophrys;
     Theron::Framework loggerFramework { Theron::Framework::Parameters{ 1U } };
     Logger logger(loggerFramework);
 

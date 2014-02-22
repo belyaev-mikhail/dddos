@@ -17,7 +17,7 @@
 
 #include "Util/macros.h"
 
-namespace ignis {
+namespace callophrys {
 namespace util {
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -215,7 +215,7 @@ struct json_object_builder {
 };
 
 } // namespace util
-} // namespace ignis
+} // namespace callophrys
 
 #include "Util/unmacros.h"
 

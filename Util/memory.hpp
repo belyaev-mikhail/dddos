@@ -7,7 +7,7 @@
 #ifndef MEMORY_HPP_
 #define MEMORY_HPP_
 
-namespace ignis {
+namespace callophrys {
 namespace util {
 
 template<class T>
@@ -20,6 +20,6 @@ template<class T, class ...Args>
 std::unique_ptr<T> make_unique(Args&&... args) { return unique(new T{ std::forward<Args>(args)... }); }
 
 } /* namespace util */
-} /* namespace ignis */
+} /* namespace callophrys */
 
 #endif /* MEMORY_HPP_ */

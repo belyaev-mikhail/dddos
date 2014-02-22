@@ -7,6 +7,6 @@
 
 #include "Checkers/SynFloodChecker.h"
 
-namespace ignis {
+namespace callophrys {
 
-} /* namespace ignis */
+} /* namespace callophrys */

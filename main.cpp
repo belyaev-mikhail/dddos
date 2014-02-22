@@ -2,5 +2,5 @@
 
 int main(int argc, char* argv[])
 {
-    ignis::Agent{ argc, argv }.start();
+    callophrys::Agent{ argc, argv }.start();
 }

@@ -3,8 +3,16 @@
 #include <Theron/Theron.h>
 
 #include "Util/Json.hpp"
+<<<<<<< local
 
+namespace ignis {
+=======
+>>>>>>> other
+
+<<<<<<< local
+=======
 namespace ignis  {
+>>>>>>> other
 namespace remote {
 
 class RestActorRef : public Theron::Actor {

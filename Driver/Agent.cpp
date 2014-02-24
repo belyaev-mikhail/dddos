@@ -10,26 +10,19 @@
 namespace callophrys {
 
 void Agent::start() {
-    using namespace callophrys;
-    Theron::Framework loggerFramework { Theron::Framework::Parameters{ 1U } };
-    Logger logger(loggerFramework);
 
-    auto sniffer = std::thread{
-        [](Theron::Address loggerAddress, bool promisc, const std::string& iface){
-            Theron::Framework local { Theron::Framework::Parameters{ 0U } };
-            SynFloodChecker checker { &local, loggerAddress };
+    Theron::Framework local { Theron::Framework::Parameters{ 0U } };
+    SynFloodChecker checker { &local, logger.GetAddress() };
 
-            Tins::Sniffer sniffer(iface, 2000, promisc, "");
-            for(auto&& pdu : sniffer) {
-                checker(pdu);
-            }
-        },
-        logger.GetAddress(),
-        promisc.getValue(),
-        interface.getValue()
-    };
-
-    sniffer.join();
+    Tins::Sniffer sniffer(
+        interface.getValue(),   // interface name
+        2000,                   // max pdu size
+        promisc.getValue(),     // is promisc
+        ""                      // berkeley packet filter string
+    );
+    for(auto&& pdu : sniffer) {
+        checker(pdu);
+    }
 }
 
 } /* namespace borealis */

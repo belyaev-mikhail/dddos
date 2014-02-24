@@ -32,6 +32,9 @@ class Agent {
     TCLAP::ValueArg<std::string> file;
     TCLAP::ValueArg<std::string> configFile;
 
+    Theron::Framework loggerFramework;
+    Logger logger;
+
 public:
     Agent(int argc, char** argv):
             cmd{ "An agent", ' ', VERSION },
@@ -39,7 +42,9 @@ public:
             interface{ "i", "interface", "Use network interface", false,
                 Tins::NetworkInterface::default_interface().name(), "ethN" },
             file{ "f", "file", "Use a pcap file as a source", false, "", "file" },
-            configFile{ "", "with-config", "Use <file> as a configuration file", false, "", "file" }
+            configFile{ "", "with-config", "Use <file> as a configuration file", false, "", "file" },
+            loggerFramework{ Theron::Framework::Parameters{ 1U } },
+            logger{ loggerFramework }
     {
         cmd.add(promisc);
         cmd.add(interface);

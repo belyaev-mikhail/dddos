@@ -32,7 +32,6 @@
  * */
 #define QUICK_RETURN(...) ->decltype(__VA_ARGS__) { return __VA_ARGS__; }
 
-#define QUICK_CONST_RETURN(...) const ->decltype(__VA_ARGS__) { return __VA_ARGS__; }
 /*
 #define BYE_BYE(type, msg) return exit<type>( \
         __FILE__, \

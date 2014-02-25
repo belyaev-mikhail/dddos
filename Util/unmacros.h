@@ -25,7 +25,8 @@
 #    undef ON_SCOPE_EXIT
 #    undef PRETOKENPASTE
 #    undef TOKENPASTE
-#    undef callophrys_MACROS_DEFINED
+
+#    undef CALLOPHRYS_MACROS_DEFINED
 
 #else
 

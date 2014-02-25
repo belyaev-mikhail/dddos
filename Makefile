@@ -13,6 +13,7 @@ INCLUDES := $(foreach dir, $(INCLUDE_DIRS), -I"$(dir)")
 CXXFLAGS := \
 	-std=c++11 \
 	-O3 \
+	\
 	$(INCLUDES) \
 	$(DEFS) \
 	$(USER_DEFS)
@@ -55,18 +56,23 @@ ADDITIONAL_INCLUDE_DIRS := \
 
 CXXFLAGS += $(foreach dir,$(ADDITIONAL_INCLUDE_DIRS),-I"$(dir)")
 
+MAIN_SOURCES := $(shell ls $(PWD)/*.cpp)
+
 SOURCES := \
-	$(shell ls $(PWD)/*.cpp) \
 	$(shell find $(ADDITIONAL_SOURCE_DIRS) -name "*.cpp" -type f) \
 	$(shell find $(ADDITIONAL_SOURCE_DIRS) -name "*.cc"  -type f)
 
+MAIN_OBJECTS := $(MAIN_SOURCES:.cpp=.o)
+
 OBJECTS := $(SOURCES:.cpp=.o)
+
+MAIN_DEPS := $(MAIN_SOURCES:.cpp=.d)
 
 DEPS := $(SOURCES:.cpp=.d)
 
 ARCHIVES :=
 
-EXES := wrapper
+EXES := agent manager
 
 %.d: %.cpp
 	@$(CXX) $(CXXFLAGS) -MM $*.cpp > $*.d
@@ -107,11 +113,15 @@ ARCHIVES += $(LIBTHERON)
 
 all: $(EXES)
 
-$(EXES): $(OBJECTS) $(ARCHIVES)
-	$(CXX) -g -o $@ $(OBJECTS) $(ARCHIVES) $(LDFLAGS)
+$(EXES) : % : %.o agent.o $(OBJECTS) $(ARCHIVES)
+	$(CXX) -g -o $@ $*.o $(OBJECTS) $(ARCHIVES) $(LDFLAGS)
+
+#$(EXES): $(OBJECTS) $(ARCHIVES)
+#	$(CXX) -g -o $@ $(OBJECTS) $(ARCHIVES) $(LDFLAGS)
 
 clean:
-	@rm -f $(EXES) $(OBJECTS) $(DEPS)
+	@rm -f $(EXES) $(OBJECTS) $(DEPS) $(MAIN_OBJECTS) $(MAIN_DEPS)
 
 ################################################################################
 -include $(DEPS)
+-include $(MAIN_DEPS)

@@ -53,11 +53,12 @@ void RestActorRef::Handler(const util::JsonValue& message, const Theron::Address
 
     // get response
     HTTPResponse res;
-    std::cout << res.getStatus() << " " << res.getReason() << std::endl;
-
     // print response
     auto&& is = session.receiveResponse(res);
+
+    std::cout << res.getStatus() << " " << res.getReason() << std::endl;
     Poco::StreamCopier::copyStream(is, std::cout);
+    std::cout << std::endl;
 
 }
 
@@ -71,13 +72,21 @@ public:
 
     virtual void handleRequest(Poco::Net::HTTPServerRequest &req, Poco::Net::HTTPServerResponse &resp)
     {
+        Json::Value v;
+        Json::Reader reader;
+        auto res = reader.parse(req.stream(), v, false);
+
+        if(res) std::cout << v.toStyledString();
+
         using namespace Poco::Net;
         resp.setStatus(HTTPResponse::HTTP_OK);
         resp.setContentType("text/json");
 
         auto&& out = resp.send();
-        out << "{}";
+        out << "{ \"result\": 0, \"id\": \"0xdeadbeef\" }";
         out.flush();
+
+        std::cout << "Yer wish is granted, lol" << std::endl;
     }
 };
 
@@ -121,6 +130,7 @@ RestActorImpl::~RestActorImpl() {
 void RestActorImpl::Handler(const util::JsonValue& message, const Theron::Address)
 {
     std::cout << "Message received, lol" << std::endl;
+    std::cout << message.toStyledString() << std::endl;
 }
 
 } /* namespace remote */

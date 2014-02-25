@@ -3,6 +3,8 @@ syntax: glob
 *.d
 *.o
 wrapper
+agent
+manager
 Docs
 Bin
 Lib

@@ -1,3 +1,4 @@
+#include <array>
 #include <memory>
 
 #include <Theron/Theron.h>
@@ -7,24 +8,41 @@
 namespace callophrys  {
 namespace remote {
 
-class RestActorRef : public Theron::Actor {
+class RestActorRefBase : public Theron::Actor {
     struct Impl;
     std::unique_ptr<Impl> pImpl;
 public:
-    explicit RestActorRef(Theron::Framework &framework, const std::string& uri);
-    ~RestActorRef();
+    explicit RestActorRefBase(Theron::Framework &framework, const std::string& uri);
+    ~RestActorRefBase();
+protected:
+    void Handler(const util::JsonValue& message, const Theron::Address);
+};
+
+class RestActorImplBase : public Theron::Actor {
+    struct Impl;
+    std::unique_ptr<Impl> pImpl;
+public:
+    explicit RestActorImplBase(Theron::Framework &framework, uint16_t port);
+    ~RestActorImplBase();
 private:
     void Handler(const util::JsonValue& message, const Theron::Address);
 };
 
-class RestActorImpl : public Theron::Actor {
-    struct Impl;
-    std::unique_ptr<Impl> pImpl;
+template<class ...PossibleArgs>
+class RestActorRef : public RestActorRefBase {
 public:
-    explicit RestActorImpl(Theron::Framework &framework, uint16_t port);
-    ~RestActorImpl();
+    explicit RestActorRef(Theron::Framework &framework, const std::string& uri):
+        RestActorRefBase{framework, uri}{
+        std::array<bool, sizeof...(PossibleArgs)> rets {
+            RegisterHandler(this, &RestActorRef::ConcreteHandler<PossibleArgs>) ...
+        };
+    };
+
 private:
-    void Handler(const util::JsonValue& message, const Theron::Address);
+    template<class T>
+    void ConcreteHandler(const T& value, const Theron::Address addr) {
+        Handler(util::toJson(value), addr);
+    }
 };
 
 } /* namespace remote */

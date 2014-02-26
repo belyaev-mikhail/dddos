@@ -23,20 +23,20 @@
 namespace callophrys {
 namespace remote {
 
-struct RestActorRef::Impl {
+struct RestActorRefBase::Impl {
     Poco::URI uri;
 };
 
-RestActorRef::RestActorRef(Theron::Framework &framework, const std::string& uri) : 
+RestActorRefBase::RestActorRefBase(Theron::Framework &framework, const std::string& uri) :
     Theron::Actor(framework),
     pImpl(new Impl{ Poco::URI{ uri.c_str() } })
 {
-    RegisterHandler(this, &RestActorRef::Handler);
+    RegisterHandler(this, &RestActorRefBase::Handler);
 }
 
-RestActorRef::~RestActorRef() {}
+RestActorRefBase::~RestActorRefBase() {}
 
-void RestActorRef::Handler(const util::JsonValue& message, const Theron::Address)
+void RestActorRefBase::Handler(const util::JsonValue& message, const Theron::Address)
 {
     using namespace Poco::Net;
     auto&& uri = pImpl->uri;
@@ -66,9 +66,9 @@ namespace {
 
 class RestActorImplRequestHandler : public Poco::Net::HTTPRequestHandler
 {
-    RestActorImpl* actor;
+    RestActorImplBase* actor;
 public:
-    RestActorImplRequestHandler(RestActorImpl* actor): actor(actor) {}
+    RestActorImplRequestHandler(RestActorImplBase* actor): actor(actor) {}
 
     virtual void handleRequest(Poco::Net::HTTPServerRequest &req, Poco::Net::HTTPServerResponse &resp)
     {
@@ -92,10 +92,10 @@ public:
 
 class RestActorImplRequestHandlerFactory : public Poco::Net::HTTPRequestHandlerFactory
 {
-    RestActorImpl* actor;
+    RestActorImplBase* actor;
 
 public:
-    RestActorImplRequestHandlerFactory(RestActorImpl* actor): actor(actor) {}
+    RestActorImplRequestHandlerFactory(RestActorImplBase* actor): actor(actor) {}
 
     virtual Poco::Net::HTTPRequestHandler* createRequestHandler(const Poco::Net::HTTPServerRequest &)
     {
@@ -105,10 +105,10 @@ public:
 
 } /* empty namespace */
 
-struct RestActorImpl::Impl { 
+struct RestActorImplBase::Impl {
     Poco::Net::HTTPServer server;
 
-    Impl(RestActorImpl* actor, uint16_t port): 
+    Impl(RestActorImplBase* actor, uint16_t port):
         server(        
             new RestActorImplRequestHandlerFactory(actor), 
             Poco::Net::ServerSocket(port), 
@@ -116,18 +116,18 @@ struct RestActorImpl::Impl {
         ) {};
 };
 
-RestActorImpl::RestActorImpl(Theron::Framework &framework, uint16_t port) : Theron::Actor(framework), pImpl() {
-    RegisterHandler(this, &RestActorImpl::Handler);
+RestActorImplBase::RestActorImplBase(Theron::Framework &framework, uint16_t port) : Theron::Actor(framework), pImpl() {
+    RegisterHandler(this, &RestActorImplBase::Handler);
 
     pImpl.reset(new Impl(this, port));
     pImpl->server.start();
 }
 
-RestActorImpl::~RestActorImpl() {
+RestActorImplBase::~RestActorImplBase() {
     pImpl->server.stop();
 }
 
-void RestActorImpl::Handler(const util::JsonValue& message, const Theron::Address)
+void RestActorImplBase::Handler(const util::JsonValue& message, const Theron::Address)
 {
     std::cout << "Message received, lol" << std::endl;
     std::cout << message.toStyledString() << std::endl;

@@ -60,7 +60,7 @@ class Agent {
     Logger logger;
 
     Theron::Framework clientFramework;
-    remote::RestActorRef serverRef;
+    remote::RestActorRef<Json::Value> serverRef;
 
 public:
     Agent(int argc, char** argv):

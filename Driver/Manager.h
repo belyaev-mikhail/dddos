@@ -41,7 +41,7 @@ class Manager {
     Logger logger;
 
     Theron::Framework serverFramework;
-    remote::RestActorImpl serverActor;
+    remote::RestActorImplBase serverActor;
 
 public:
 

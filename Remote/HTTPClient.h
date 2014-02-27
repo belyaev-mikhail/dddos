@@ -34,7 +34,7 @@ public:
     explicit RestActorRef(Theron::Framework &framework, const std::string& uri):
         RestActorRefBase{framework, uri}{
         std::array<bool, sizeof...(PossibleArgs)> rets {
-            RegisterHandler(this, &RestActorRef::ConcreteHandler<PossibleArgs>) ...
+            { RegisterHandler(this, &RestActorRef::ConcreteHandler<PossibleArgs>) ... }
         };
     };
 

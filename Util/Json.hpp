@@ -15,6 +15,8 @@
 
 #include "Util/meta.hpp"
 
+#include "Util/Optional.hpp"
+
 #include "Util/macros.h"
 
 namespace callophrys {
@@ -29,34 +31,35 @@ struct json_traits;
 
 template<>
 struct json_traits<JsonValue> {
-    typedef std::unique_ptr<JsonValue> optional_ptr_t;
+    typedef optional<JsonValue> optional_ptr_t;
 
     static JsonValue toJson(const JsonValue& val) {
         return val;
     }
 
     static optional_ptr_t fromJson(const JsonValue& json) {
-        return optional_ptr_t{ new JsonValue{ json } };
+        return optional_ptr_t{ json };
     }
 };
 
 template<>
 struct json_traits<bool> {
-    typedef std::unique_ptr<bool> optional_ptr_t;
+    typedef optional<bool> optional_ptr_t;
 
     static JsonValue toJson(bool val) {
         return JsonValue(val);
     }
 
     static optional_ptr_t fromJson(const JsonValue& json) {
-        return json.isBool() ? optional_ptr_t{ new bool{json.asBool()} } :
-                               nullptr;
+        return json.isBool()
+             ? optional_ptr_t{ json.asBool() }
+             : nothing();
     }
 };
 
 template< class T >
 struct json_traits<T, GUARD(std::is_floating_point<T>::value)> {
-    typedef std::unique_ptr<T> optional_ptr_t;
+    typedef optional<T> optional_ptr_t;
 
     static JsonValue toJson(T val) {
         return JsonValue(val);
@@ -64,42 +67,44 @@ struct json_traits<T, GUARD(std::is_floating_point<T>::value)> {
 
     static optional_ptr_t fromJson(const JsonValue& json) {
         return json.isDouble() || json.isIntegral()
-               ? optional_ptr_t{ new T{json.asDouble()} }
-               : nullptr;
+               ? optional_ptr_t{ static_cast<T>(json.asDouble()) }
+               : nothing();
     }
 };
 
 template< class T >
 struct json_traits<T, GUARD(std::is_integral<T>::value && std::is_signed<T>::value)> {
-    typedef std::unique_ptr<T> optional_ptr_t;
+    typedef optional<T> optional_ptr_t;
 
     static JsonValue toJson(T val) {
         return JsonValue(static_cast<Json::Int>(val));
     }
 
     static optional_ptr_t fromJson(const JsonValue& json) {
-        return json.isIntegral() ? optional_ptr_t{ new T{json.asInt()} } :
-                                   nullptr;
+        return json.isIntegral()
+                ? optional_ptr_t{ static_cast<T>(json.asInt()) }
+                : nothing();
     }
 };
 
 template< class T >
 struct json_traits<T, GUARD(std::is_integral<T>::value && std::is_unsigned<T>::value)> {
-    typedef std::unique_ptr<T> optional_ptr_t;
+    typedef optional<T> optional_ptr_t;
 
     static JsonValue toJson(T val) {
         return JsonValue(static_cast<Json::UInt>(val));
     }
 
     static optional_ptr_t fromJson(const JsonValue& json) {
-        return json.isIntegral() ? optional_ptr_t{ new T{json.asUInt()} } :
-                                   nullptr;
+        return json.isIntegral()
+                ? optional_ptr_t{ static_cast<T>(json.asUInt()) }
+                : nothing();
     }
 };
 
 template<>
 struct json_traits<std::string> {
-    typedef std::unique_ptr<std::string> optional_ptr_t;
+    typedef optional<std::string> optional_ptr_t;
 
     static JsonValue toJson(const std::string& val) {
         return JsonValue(val);
@@ -107,8 +112,8 @@ struct json_traits<std::string> {
 
     static optional_ptr_t fromJson(const JsonValue& json) {
         return json.isString()
-               ? optional_ptr_t{ new std::string{json.asString()} }
-               : nullptr;
+               ? optional_ptr_t{ json.asString() }
+               : nothing();
     }
 };
 

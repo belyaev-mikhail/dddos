@@ -22,7 +22,7 @@ namespace util {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-using JsonValue = Json::Value;
+typedef Json::Value JsonValue;
 
 template<class T, typename SFINAE = void>
 struct json_traits;
@@ -192,14 +192,14 @@ struct json_object_builder {
 
     // this is a constructor that takes a number of std::strings
     // exactly the same as the number of types in Args
-    json_object_builder(const type_K_comb_q<std::string, Args>&... keys) : keys { keys... } {}
+    json_object_builder(const typename type_K_comb<std::string, Args>::type&... keys) : keys { keys... } {}
 
     template<size_t ...Ixs>
     Obj* build_(const JsonValue& val, util::indexer<Ixs...>) const {
         if(!val.isObject()) return nullptr;
 
-        std::tuple<typename json_traits<util::index_in_row_q<Ixs, Args...>>::optional_ptr_t...> ptrs {
-            util::fromJson<util::index_in_row_q<Ixs, Args...>>(val[keys[Ixs]])...
+        std::tuple<typename json_traits<const typename util::index_in_row<Ixs, Args...>::type>::optional_ptr_t...> ptrs {
+            util::fromJson<typename util::index_in_row<Ixs, Args...>::type>(val[keys[Ixs]])...
         };
 
         if(!impl::allptrs(std::get<Ixs>(ptrs)...)) return nullptr;

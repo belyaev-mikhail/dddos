@@ -38,8 +38,8 @@ struct SynFloodChecker {
     Theron::Address logger;
     std::unordered_map<Tins::IPv4Address, size_t> factors;
 
-    SynFloodChecker(Theron::Framework* framework, Theron::Address logger):
-        framework(framework), logger(logger), factors{} {};
+    SynFloodChecker(Theron::Framework& framework, Theron::Address logger):
+        framework(&framework), logger(logger), factors{} {};
 
     void operator()(Tins::PDU& pdu) {
         if(auto tcp = pdu.find_pdu<Tins::TCP>()) {

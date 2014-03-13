@@ -25,6 +25,8 @@ namespace remote {
 
 struct RestActorRefBase::Impl {
     Poco::URI uri;
+
+    explicit Impl(const Poco::URI& uri): uri{uri} {};
 };
 
 RestActorRefBase::RestActorRefBase(Theron::Framework &framework, const std::string& uri) :

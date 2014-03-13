@@ -37,8 +37,8 @@ struct type_K_comb {
     typedef F type;
 };
 
-template<class F, class S>
-using type_K_comb_q = typename type_K_comb<F,S>::type;
+//template<class F, class S>
+//using type_K_comb_q = typename type_K_comb<F,S>::type;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -61,8 +61,8 @@ struct tl_car< type_list<H, Args...> > {
     typedef H type;
 };
 
-template<class TList>
-using tl_car_q = typename tl_car<TList>::type;
+//template<class TList>
+//using tl_car_q = typename tl_car<TList>::type;
 
 // cdr
 template<class List>
@@ -74,8 +74,8 @@ struct tl_cdr< type_list<H, Args...> > {
     typedef type_list<Args...> type;
 };
 
-template<class TList>
-using tl_cdr_q = typename tl_cdr<TList>::type;
+//template<class TList>
+//using tl_cdr_q = typename tl_cdr<TList>::type;
 
 // type_list -> tuple
 template<class List>
@@ -86,8 +86,8 @@ struct tl_to_tuple< type_list<Args...> > {
     typedef std::tuple<Args...> type;
 };
 
-template<class TList>
-using tl_to_tuple_q = typename tl_to_tuple<TList>::type;
+//template<class TList>
+//using tl_to_tuple_q = typename tl_to_tuple<TList>::type;
 
 // tuple -> type_list
 template<class Tuple>
@@ -98,8 +98,8 @@ struct tl_from_tuple< std::tuple<Args...> > {
     typedef type_list<Args...> type;
 };
 
-template<class Tuple>
-using tl_from_tuple_q = typename tl_from_tuple<Tuple>::type;
+//template<class Tuple>
+//using tl_from_tuple_q = typename tl_from_tuple<Tuple>::type;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -210,11 +210,11 @@ struct index_in_row<I, _, Tail...> {
     typedef typename index_in_row<I-1, Tail...>::type type;
 };
 
-template<size_t I, class ...List>
-using index_in_row_q = typename index_in_row<I, List...>::type;
-
-template<class ...List>
-using head_of_row_q = typename index_in_row<0U, List...>::type;
+//template<size_t I, class ...List>
+//using index_in_row_q = typename index_in_row<I, List...>::type;
+//
+//template<class ...List>
+//using head_of_row_q = typename index_in_row<0U, List...>::type;
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -264,8 +264,8 @@ struct index_in_type_list<I, type_list<Args...>> {
     typedef typename index_in_row<I, Args...>::type type;
 };
 
-template<size_t I, class TypeList>
-using index_in_type_list_q = typename index_in_type_list<I, TypeList>::type;
+//template<size_t I, class TypeList>
+//using index_in_type_list_q = typename index_in_type_list<I, TypeList>::type;
 
 } // namespace util
 } // namespace callophrys

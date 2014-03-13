@@ -11,7 +11,7 @@ USER_DEFS :=
 INCLUDES := $(foreach dir, $(INCLUDE_DIRS), -I"$(dir)")
 
 CXXFLAGS := \
-	-std=c++11 \
+	-std=gnu++0x \
 	-O3 \
 	\
 	$(INCLUDES) \
